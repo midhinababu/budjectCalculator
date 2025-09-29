@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Calculator</title>
+</head>
+<body>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: rgb(226, 247, 247);
+        }
+        nav{
+            background-color: rgb(9, 9, 61);
+            color: azure;
+            font-size: larger;
+            padding: 10px;
+        }
+        nav a{
+            color: azure;
+            text-decoration: none;
+        }
+        .btn{
+        color:black;
+        background-color: hsl(207, 84%, 70%);
+        border:none
+        }
+       .budget{
+         display:flex;
+         justify-content:space-evenly;
+         margin-top: 20px;
+        }
+        ul{
+          list-style: none;
+          display: flex;
+          justify-content: space-between;
+          padding: 10px;
+        }
+        input{
+          border:none;
+          padding: 10px;
+          border-radius: 10px;
+          margin: 5px;
+          text-align: center;
+          font-size:medium;
+      }
+      .bdgj{
+        border-radius: 10px;
+        margin: 10px;
+        width: 20%;
+        background-color: hsl(207, 71%, 86%);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      table{
+        margin-top: 20px;
+        border: 1px rgb(255, 255, 255) solid;
+      }
+      .clear{
+        text-align: center;
+        padding: 20px;
+      }
+      .clearbtn{
+        padding: 15px;
+        border-radius:10px;
+        color:black;
+        background-color: rgb(165, 165, 247);
+        border:none;
+        font-size: larger;
+      }
+      td{
+        padding: 10px;
+        border: 1px black solid;
+        margin: 0px;
+      }
+      h3{
+        color:rgb(2, 2, 104);
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .exp{
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 2px 2px 4px 1px rgb(175, 175, 175)  ;
+        text-align: center;
+        width:30%
+      }
+        form {
+    display: flex;
+    flex-direction: column;   
+    justify-content: center;  
+   
+  }
+
+    </style>
+
+    <nav>
+    <ul>
+         <li>Budget Calculator</li>
+         <li>
+            <a href="login.html">LogOut</a>
+         </li>
+   
+    </ul>
+    </nav>
+
+    <div style="text-align: center; margin-top:50px">
+         <h1 style="color:rgb(9, 9, 82)">Budget Calculator </h1>
+         <br>
+         <p style="text-align:center;font-size: larger;">
+      This budget calculator is mainly for the planning of personal finance. All the income items are before tax values.<br>
+    It helps you track your income and expenses effectively.<br>
+You can use it to maintain savings and manage your monthly budget better.
+</p>
+    </div>
+    <div class="budget">
+    <div class="bdgj">
+        <div class="exp">
+            <p>Total Balance</p>
+            <p id="balancedisplay">0</p>
+        </div>
+        <br>
+        <h3>Add Income</h3>
+        <hr>
+        <form action="">
+     <input type="text" id="incType" placeholder="Enter Income Type"> <br>
+     <input type="text" id="incAmt" placeholder="Enter Amount">
+     <br>
+     <input class="btn" type="Submit" onclick="addIncome(event)">
+        </form>
+    </div>
+     <div class="bdgj">
+        <div class="exp">
+            <p>Total Expense</p>
+            <p id="expenseExpense">0</p>
+        </div>
+        <br>
+        <h3>Add Expense</h3>
+        <hr>
+         <form action="">
+            <input type="text" id="ExpType" placeholder="Enter Expenses Type"> <br>
+            <input type="text" id="ExpAmt" placeholder="Enter Amount">
+            <br>
+            <input class="btn" type="Submit" onclick="addExpense()">
+        </form>
+    </div>
+    </div>
+    <div class="clear">
+        <button class="clearbtn">Clear All</button>
+    </div>
+    <div>
+        <h3 style="font-size:xx-large;">Income Expenses Details</h3>
+        <hr>
+         <div class="budget">
+             <div class="tb">
+                <h3>Income</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Type</td>
+                            <td>Amount</td>
+                            <td>Balance</td>
+                            <td>Date & Time</td>
+                        </tr>
+                    </thead>
+                    <tbody id="incomeTable">
+
+                    </tbody>
+                </table>
+             </div>
+             <div class="tb">
+                <h3>Expense</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Type</td>
+                            <td>Amount</td>
+                            <td>Balance</td>
+                            <td>Date & Time</td>
+                        </tr>
+                    </thead>
+                    <tbody id="expTable">
+                           
+                    </tbody>
+                </table>
+             </div>
+         </div>
+    </div>
+
+    <div class="clear">
+        <h3>Expense Pie-Chart</h3>
+        <button class="btn" style="padding:15px;border-radius: 10px;">Show Pie-Chart</button>
+    </div>
+</body>
+<script>
+
+
+let balancedisplay=0;
+
+let expensedisplay=0;
+
+
+function addIncome(event){
+    event.preventDefault();
+    income={
+         incType:incType.value,
+         amt:incAmt.value
+    }    
+    localStorage.setItem('income',JSON.stringify(income));
+    updateIncomeTable();
+    incType.value=''
+    incAmt.value=''
+}
+
+
+function updateIncomeTable(){
+  let incomedata=JSON.parse(localStorage.getItem('income')); 
+  let inconetype=incomedata.incType;
+  let amount=incomedata.amt;
+  amount=Number(amount)
+  balancedisplay+=amount
+  console.log(balancedisplay); 
+   document.getElementById('balancedisplay').innerHTML=''
+  document.getElementById('balancedisplay').innerHTML+=`${balancedisplay}`
+  document.getElementById('incomeTable').innerHTML+=`<tr>
+                                <td>${inconetype}</td>
+                                <td>${amount}</td>
+                                <td>${balancedisplay}</td>
+                                <td>${new Date().toLocaleDateString()},${new Date().toLocaleTimeString()}</td>
+                            </tr>`
+}
+
+
+
+function addExpense(){
+    event.preventDefault();
+    expence={
+    expamount:ExpAmt.value,
+    expType:ExpType.value
+  }
+    localStorage.setItem('expense',JSON.stringify(expence));
+    ExpAmt.value=""
+    ExpType.value=""    
+    updateExpensesTable();
+}
+
+
+
+function updateExpensesTable(type,value){
+  let data=JSON.parse(localStorage.getItem('expense')); 
+  let exptype=data.expType;
+  let amount=data.expamount;
+  amount=Number(amount)
+  expensedisplay+=amount;
+  balancedisplay-=amount
+  document.getElementById('balancedisplay').innerHTML=''
+  document.getElementById('balancedisplay').innerHTML+=`${balancedisplay}`
+  document.getElementById('expenseExpense').innerHTML=''
+  document.getElementById('expenseExpense').innerHTML+=`${expensedisplay}`
+  document.getElementById('expTable').innerHTML+=`<tr>
+                                <td>${exptype}</td>
+                                <td>${amount}</td>
+                                 <td>${balancedisplay}</td>
+                                <td>${new Date().toLocaleDateString()},${new Date().toLocaleTimeString()}</td>
+                            </tr>`
+}
+
+
+</script>
+</html>
